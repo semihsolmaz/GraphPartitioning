@@ -5,12 +5,16 @@ from networkx.linalg.spectrum import laplacian_spectrum
 from networkx.classes.function import subgraph
 import networkx as nx
 
-class SpectralBisection:
 
+class SpectralBisection:
+    """
+    Divide graph into partitons using spectral bisection algorithm
+    :param g: networkX graph
+    :return: list  networkX graphs
+    """
     def __init__(self, g):
         self.graph = g
         self.partitions = self.graph
-        self.removed_edges = []
         # self.laplacian_matrix = laplacian_matrix(g)
         # self.laplacian_spectrum = laplacian_spectrum(g)
         # self.algebraic_connectivity = algebraic_connectivity(g)
@@ -21,37 +25,33 @@ class SpectralBisection:
         fiedler_vector_g = fiedler_vector(self.graph)
         spectral_ordering_g = spectral_ordering(self.graph)
 
-        for node in spectral_ordering_g:
-            if fiedler_vector_g[node] < 0:
+        for index, node in enumerate(g.nodes):
+            if fiedler_vector_g[index] < 0:
                 part_1.append(node)
             else:
                 part_2.append(node)
 
         self.partitions = [subgraph(self.graph, part_1), subgraph(self.graph, part_2)]
-
-        for edge in self.graph.edges:
-            if edge not in list(self.partitions[0].edges) + list(self.partitions[1].edges):
-                self.removed_edges.append(edge)
         return self.partitions
 
     def getRemovedEdges(self):
+        removed_edges = []
+        for edge in self.graph.edges:
+            if edge not in list(self.partitions[0].edges) + list(self.partitions[1].edges):
+                removed_edges.append(edge)
+        return removed_edges
 
-        return self.removed_edges
+    def numberOfEdgesCut(self):
+        number_of_edges_cut = fiedler_vector(self.graph) @ laplacian_matrix(self.graph) @ fiedler_vector(self.graph).T
 
+        return number_of_edges_cut
 
-
-
-# laplacian_g = laplacian_matrix(g)
-# laplacian_spectrum_g = laplacian_spectrum(g)
-# algebraic_con_g = algebraic_connectivity(g)
-# fiedler_vector_g = fiedler_vector(g)
-# spectral_ordering_g = spectral_ordering(g)
 
 if __name__ == '__main__':
-    g = nx.karate_club_graph()
+    g = nx.les_miserables_graph()
     bisec = SpectralBisection(g)
     parts = bisec.partition()
     for i in parts:
-        print(list(i.edges))
+        print(list(i.nodes))
 
-    print(bisec.getRemovedEdges())
+    print(bisec.numberOfEdgesCut())
