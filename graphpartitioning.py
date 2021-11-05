@@ -54,6 +54,8 @@ class SpectralBisection:
             if n == 1:
                 plt.savefig("PartedGraph.png", format="PNG")
 
+    # todo: limit node number for drawing
+    # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
 
         combined = nx.compose(self.partitions[0], self.partitions[1])
