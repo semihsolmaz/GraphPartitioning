@@ -26,9 +26,10 @@ class SpectralBisection:
         part_1 = []
         part_2 = []
         fiedler_vector_g = fiedler_vector(self.graph)
-        spectral_ordering_g = spectral_ordering(self.graph)
+        # Maybe cut into 2 rpt spectral ordering?
+        # spectral_ordering_g = spectral_ordering(self.graph)
 
-        for index, node in enumerate(g.nodes):
+        for index, node in enumerate(self.graph.nodes):
             if fiedler_vector_g[index] < 0:
                 part_1.append(node)
             else:

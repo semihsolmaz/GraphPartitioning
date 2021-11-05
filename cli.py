@@ -4,51 +4,70 @@ from graphpartitioning import SpectralBisection
 import csv
 
 
-@click.group()
-# @click.option('--debug/--no-debug', default=False)
-@click.option("--in", "-i", "in_file", required=True, help="Path to graph file to be processed.",)
-@click.pass_context
-def cli(ctx, in_file):
-    ctx.ensure_object(dict)
-    ctx.obj['in_file'] = [in_file]
-    click.echo(in_file)
+def cli():
+    parser = argparse.ArgumentParser(description="A graph partitioning application!")
 
+    # defining arguments for parser object
+    parser.add_argument('method',
+                        choices=['SpectralBisection'],
+                        type=str,
+                        nargs=1,
+                        metavar="method",
+                        help="Name of graph partiton algorithm. Options are:['SpectralBisection']")
 
-@cli.command()  # @cli, not @click!
-# @click.argument('filename')
-# @click.option("--in", "-i", "in_file", required=True, help="Path to graph file to be processed.",)
-# @click.option("--out-file", "-o", default="./output.xlsx", help="Path to output file for partitions.")
-# @click.option("--delimiter", "-del", default=" ", help="Delimiter for edge list file.")
-# @click.option('--draw', '-d', default='',
-#               type=click.Choice(['', 'kamada-kawai', 'circular'], case_sensitive=False),
-#               help="Layout for graphic output.")
-@click.pass_context
-def SpectralBisection(ctx):
-    filename = ctx.obj['in_file']
-    click.echo('Loading ' + filename[0] + '...')
-    graph = nx.read_edgelist(filename[0], delimiter=',', nodetype=str)
-    graph.name = filename[0].split('.')[0]
-    click.echo(filename[0] + ' read:\n' + nx.info(graph))
+    parser.add_argument("-r", "--read",
+                        type=str, nargs=1,
+                        metavar="input_file_path",
+                        default=None,
+                        required=True,
+                        help="Opens and reads the specified graph file.")
 
-    click.echo('Partitioning...')
-    bisection = SpectralBisection(graph)
-    click.echo('hre...')
-    partitions = bisection.partition()
-    click.echo('hre...')
-    header = ['node', 'node', 'partition']
-    click.echo('hre...')
-    with open(filename[0].split('.')[0] + '-output.csv', 'w', encoding='UTF8') as f:
-        click.echo('hre...')
-        writer = csv.writer(f)
-        writer.writerow(header)
+    parser.add_argument("-o", "--output", type=str, nargs=1,
+                        metavar="output_path", default=None,
+                        help="output path with filename for output file. "
+                             "Default name is [input_filename]-output.csv and default directory is current directory")
 
-        for index, partition in enumerate(partitions):
-            for edge in partition.edges:
-                writer.writerow(list(edge) + [str(index)])
+    parser.add_argument("-d", "--draw",
+                        action='store_true',
+                        help="Draws a graphical representation of graph. Default is false")
 
-    # if len(draw) > 0:
-    #     print('drawing')
+    # parse the arguments from standard input
+    args = parser.parse_args()
+
+    # calling functions depending on type of argument
+    if args.read is not None:
+        print(args)
+        graph = nx.read_edgelist(args.read[0], delimiter=',', nodetype=str)
+        graph.name = args.read[0].split('.')[0]
+
+    if args.method is not None:
+        if args.method[0] == 'SpectralBisection':
+            partitions = SpectralBisection(graph).partition()
+
+        if args.output is not None:
+            output_file = args.output[0]
+        else:
+            output_file = args.read[0].split('.')[0] + '-output.csv'
+
+        headers = ['node', 'node', 'partition']
+
+        with open(output_file, 'w', encoding='UTF8') as f:
+
+            writer = csv.writer(f)
+            writer.writerow(headers)
+
+            for index, partition in enumerate(partitions):
+                for edge in partition.edges:
+                    writer.writerow(list(edge) + [str(index)])
+
+    # elif args.delete != None:
+    #     delete(args)
+    # elif args.copy != None:
+    #     copy(args)
+    # elif args.rename != None:
+    #     rename(args)
 
 
 if __name__ == "__main__":
-    cli(obj={})
+    # calling the main function
+    cli()
