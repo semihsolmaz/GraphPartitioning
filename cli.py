@@ -55,6 +55,7 @@ def cli():
         print(f"{bcolors.OKGREEN}{args.read[0]} is read.{bcolors.ENDC}")
         print(f"Graph Info:\n{nx.info(graph)}")
 
+    # todo: add controls for directed and weighted graphs
     if args.method is not None:
         if args.method[0] == 'SpectralBisection':
             print(f"{bcolors.BOLD}Partitioning...{bcolors.ENDC}")
