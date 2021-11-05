@@ -41,7 +41,7 @@ class SpectralBisection:
     def getRemovedEdges(self):
         removed_edges = []
         for edge in self.graph.edges:
-            if edge not in list(self.partitions[0].edges) + list(self.partitions[1].edges):
+            if set(edge) not in [set(item) for item in list(self.partitions[0].edges) + list(self.partitions[1].edges)]:
                 removed_edges.append(edge)
         return removed_edges
 
@@ -54,7 +54,7 @@ class SpectralBisection:
             if n == 1:
                 plt.savefig("PartedGraph.png", format="PNG")
 
-    def drawInitialWithColor(self):
+    def drawInitialWithColor(self, outfile):
 
         combined = nx.compose(self.partitions[0], self.partitions[1])
         nx.set_edge_attributes(combined, 'b', 'color')
@@ -64,10 +64,10 @@ class SpectralBisection:
 
         colors = nx.get_edge_attributes(combined, 'color').values()
         options = {"node_color": "white", "node_size": 100, "linewidths": 0, "width": 0.1, "with_labels": True}
-        pos = nx.kamada_kawai_layout(g)
+        pos = nx.kamada_kawai_layout(combined)
 
         nx.draw(combined, pos, edge_color=colors, **options)
-        plt.savefig("removedEdges.png", format="PNG")
+        plt.savefig(outfile, format="PNG")
 
         return combined
 
@@ -85,27 +85,3 @@ if __name__ == '__main__':
     bisection = SpectralBisection(g)
 
     partitions = bisection.partition()
-
-    header = ['node', 'node', 'partition']
-
-    with open('output.csv', 'w', encoding='UTF8') as f:
-        writer = csv.writer(f)
-        writer.writerow(header)
-
-        for index, partition in enumerate(partitions):
-            for edge in partition.edges:
-                writer.writerow(list(edge) + [str(index)])
-
-
-    print('initial: ' + str(nx.average_clustering(g)))
-    bisec = SpectralBisection(g)
-    parts = bisec.partition()
-    bisec.drawPartitions()
-    for n, i in enumerate(parts):
-        print(list(i.nodes))
-        print('partition ' + str(n) + ': ' + str(nx.average_clustering(i)))
-    comb = bisec.drawInitialWithColor()
-    print(comb.nodes)
-
-
-    # print(bisec.numberOfEdgesCut())
