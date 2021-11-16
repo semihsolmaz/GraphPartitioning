@@ -49,9 +49,9 @@ class SpectralBisection:
         edge_list_after_removal = []
         for part in self.partitions:
             for edge in part.edges:
-                edge_list_after_removal.append(edge)
+                edge_list_after_removal.append(set(edge))
         for edge in self.graph.edges:
-            if set(edge) not in [set(item) for item in edge_list_after_removal]:
+            if set(edge) not in edge_list_after_removal:
                 removed_edges.append(edge)
         return removed_edges
 
