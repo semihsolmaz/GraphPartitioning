@@ -8,8 +8,8 @@ from networkx.linalg.spectrum import laplacian_spectrum
 import networkx as nx
 
 
-# g = nx.karate_club_graph()
-g = nx.read_edgelist('soc-karate.csv', delimiter=' ', nodetype=str)
+g = nx.karate_club_graph()
+# g = nx.read_edgelist('soc-karate.csv', delimiter=' ', nodetype=str)
 laplacian_g = laplacian_matrix(g)
 laplacian_spectrum_g = laplacian_spectrum(g)
 algebraic_con_g = algebraic_connectivity(g)

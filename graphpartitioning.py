@@ -17,31 +17,41 @@ class SpectralBisection:
     """
     def __init__(self, g):
         self.graph = g
-        self.partitions = self.graph
+        self.partitions = [self.graph]
         # self.laplacian_matrix = laplacian_matrix(g)
         # self.laplacian_spectrum = laplacian_spectrum(g)
         # self.algebraic_connectivity = algebraic_connectivity(g)
 
-    def partition(self):
-        part_1 = []
-        part_2 = []
-        fiedler_vector_g = fiedler_vector(self.graph)
-        # Maybe cut into 2 rpt spectral ordering?
-        # spectral_ordering_g = spectral_ordering(self.graph)
+    def partition(self, number_of_partitions):
+        if number_of_partitions > len(self.graph.nodes):
+            raise ValueError('Number of partitions cant be larger than number of nodes',
+                             '#ofnodes:' + str(len(self.graph.nodes)) + ' < #ofpartitions:' + str(number_of_partitions))
+        partitions_list = [self.graph]
+        while len(partitions_list) < number_of_partitions:
+            part_1 = []
+            part_2 = []
+            graph_bisect = partitions_list.pop(0)
+            spectral_ordering_g = spectral_ordering(graph_bisect)
 
-        for index, node in enumerate(self.graph.nodes):
-            if fiedler_vector_g[index] < 0:
-                part_1.append(node)
-            else:
-                part_2.append(node)
+            for index, node in enumerate(spectral_ordering_g):
+                if index < int(len(spectral_ordering_g)/2):
+                    part_1.append(node)
+                else:
+                    part_2.append(node)
 
-        self.partitions = [subgraph(self.graph, part_1), subgraph(self.graph, part_2)]
+            partitions_list.append(subgraph(self.graph, part_1))
+            partitions_list.append(subgraph(self.graph, part_2))
+        self.partitions = partitions_list
         return self.partitions
 
     def getRemovedEdges(self):
         removed_edges = []
+        edge_list_after_removal = []
+        for part in self.partitions:
+            for edge in part.edges:
+                edge_list_after_removal.append(edge)
         for edge in self.graph.edges:
-            if set(edge) not in [set(item) for item in list(self.partitions[0].edges) + list(self.partitions[1].edges)]:
+            if set(edge) not in [set(item) for item in edge_list_after_removal]:
                 removed_edges.append(edge)
         return removed_edges
 
@@ -58,7 +68,7 @@ class SpectralBisection:
     # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
 
-        combined = nx.compose(self.partitions[0], self.partitions[1])
+        combined = nx.compose(*self.partitions)
         nx.set_edge_attributes(combined, 'b', 'color')
         # combined.add_edges_from(self.getRemovedEdges(), color='r')
         for edge in self.getRemovedEdges():
@@ -86,4 +96,8 @@ if __name__ == '__main__':
     g.name = 'karate'
     bisection = SpectralBisection(g)
 
-    partitions = bisection.partition()
+    partitions = bisection.partition(4)
+    bisection.drawInitialWithColor('test.png')
+    print(bisection.getRemovedEdges())
+    for i in partitions:
+        print((len(i.nodes)))
