@@ -67,18 +67,22 @@ class SpectralBisection:
     # todo: limit node number for drawing
     # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
-
-        combined = nx.compose(*self.partitions)
+        colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow']
+        combined = nx.Graph()
+        for ind, part in enumerate(self.partitions):
+            nx.set_node_attributes(part, colors[ind], 'color')
+            combined = nx.compose(combined, part)
+        node_colors = nx.get_node_attributes(combined, 'color').values()
         nx.set_edge_attributes(combined, 'b', 'color')
         # combined.add_edges_from(self.getRemovedEdges(), color='r')
         for edge in self.getRemovedEdges():
             combined.add_edge(*edge, color='r')
 
         colors = nx.get_edge_attributes(combined, 'color').values()
-        options = {"node_color": "white", "node_size": 100, "linewidths": 0, "width": 0.1, "with_labels": True}
+        options = {"node_size": 300, "linewidths": 0.5, "width": 0.2, "with_labels": True}
         pos = nx.kamada_kawai_layout(combined)
 
-        nx.draw(combined, pos, edge_color=colors, **options)
+        nx.draw(combined, pos, edge_color=colors, node_color=node_colors, **options)
         plt.savefig(outfile, format="PNG")
 
         return combined

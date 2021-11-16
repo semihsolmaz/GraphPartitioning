@@ -35,6 +35,12 @@ def cli():
                         required=True,
                         help="Opens and reads the specified graph file.")
 
+    parser.add_argument("-n", "--number_of_partitions",
+                        type=int, nargs=1,
+                        metavar="number_of_partitions",
+                        default=2,
+                        help="Number of partitions to be created by algorithm")
+
     parser.add_argument("-o", "--output", type=str, nargs=1,
                         metavar="output_path", default=None,
                         help="output path with filename for output file. "
@@ -60,7 +66,7 @@ def cli():
         if args.method[0] == 'SpectralBisection':
             print(f"{bcolors.BOLD}Partitioning...{bcolors.ENDC}")
             parted_graph = SpectralBisection(graph)
-            partitions = parted_graph.partition()
+            partitions = parted_graph.partition(args.number_of_partitions[0])
             print(f"{bcolors.OKGREEN}Done.{bcolors.ENDC}")
 
         if args.output is not None:
