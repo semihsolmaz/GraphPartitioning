@@ -9,22 +9,27 @@ Optionally, a png graphic file displaying orginal graph and the removed edges ca
 
 ## Usage
 ```
-usage: cli.py [-h] -r input_file_path [-o output_path] [-d] method
+usage: cli.py [-h] -r input_file_path [-n number_of_partitions]
+              [-o output_path] [-d]
+              method
 
 A graph partitioning application!
 
 positional arguments:
   method                Name of graph partiton algorithm. Options
-                        are:['SpectralBisection']
+                        are:['SpectralBisection', 'KernighanLin']
 
 optional arguments:
   -h, --help            show this help message and exit
   -r input_file_path, --read input_file_path
                         Opens and reads the specified graph file.
+  -n number_of_partitions, --number_of_partitions number_of_partitions
+                        Number of partitions to be created by algorithm
   -o output_path, --output output_path
                         output path with filename for output file. Default
                         name is [input_filename]-output.csv and default
                         directory is current directory
   -d, --draw            Draws a graphical representation of graph. Default is
                         false
+
 ```                        
