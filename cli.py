@@ -1,6 +1,6 @@
 import argparse
 import networkx as nx
-from graphpartitioning import SpectralBisection
+from graphpartitioning import SpectralBisection, KernighanLin
 import csv
 from colorama import init, deinit
 
@@ -22,11 +22,11 @@ def cli():
 
     # defining arguments for parser object
     parser.add_argument('method',
-                        choices=['SpectralBisection'],
+                        choices=['SpectralBisection', 'KernighanLin'],
                         type=str,
                         nargs=1,
                         metavar="method",
-                        help="Name of graph partiton algorithm. Options are:['SpectralBisection']")
+                        help="Name of graph partiton algorithm. Options are:['SpectralBisection', 'KernighanLin']")
 
     parser.add_argument("-r", "--read",
                         type=str, nargs=1,
@@ -66,6 +66,11 @@ def cli():
         if args.method[0] == 'SpectralBisection':
             print(f"{bcolors.BOLD}Partitioning...{bcolors.ENDC}")
             parted_graph = SpectralBisection(graph)
+            partitions = parted_graph.partition(args.number_of_partitions[0])
+            print(f"{bcolors.OKGREEN}Done.{bcolors.ENDC}")
+        elif args.method[0] == 'KernighanLin':
+            print(f"{bcolors.BOLD}Partitioning...{bcolors.ENDC}")
+            parted_graph = KernighanLin(graph)
             partitions = parted_graph.partition(args.number_of_partitions[0])
             print(f"{bcolors.OKGREEN}Done.{bcolors.ENDC}")
 
