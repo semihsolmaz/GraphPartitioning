@@ -26,7 +26,8 @@ def cli():
                         type=str,
                         nargs=1,
                         metavar="method",
-                        help="Name of graph partiton algorithm. Options are:['SpectralBisection', 'KernighanLin']")
+                        help="Name of graph partition algorithm. "
+                             "Options are:['SpectralBisection', 'KernighanLin', 'EdgeBetweennessCentrality']")
 
     parser.add_argument("-r", "--read",
                         type=str, nargs=1,
@@ -73,6 +74,8 @@ def cli():
             parted_graph = KernighanLin(graph)
             partitions = parted_graph.partition(args.number_of_partitions[0])
             print(f"{bcolors.OKGREEN}Done.{bcolors.ENDC}")
+        elif args.method[0] == 'EdgeBetweennessCentrality':
+            print('EdgeBetweennessCentrality')
 
         if args.output is not None:
             output_file = args.output[0]
