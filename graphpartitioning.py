@@ -1,12 +1,13 @@
 import operator
 import matplotlib.pyplot as plt
-from networkx.algorithms.community import kernighan_lin
+from networkx.algorithms.community import kernighan_lin, girvan_newman
 from networkx.algorithms.centrality import edge_betweenness_centrality
 from networkx.algorithms.components import is_connected, connected_components
 from networkx.linalg.laplacianmatrix import laplacian_matrix
 from networkx.linalg.algebraicconnectivity import algebraic_connectivity, fiedler_vector, spectral_ordering
 from networkx.classes.function import subgraph
 import networkx as nx
+import itertools
 
 
 class SpectralBisection:
@@ -33,6 +34,7 @@ class SpectralBisection:
             graph_bisect = partitions_list.pop(0)
             spectral_ordering_g = spectral_ordering(graph_bisect)
 
+            # todo: directly slice list without iterating
             for index, node in enumerate(spectral_ordering_g):
                 if index < int(len(spectral_ordering_g)/2):
                     part_1.append(node)
@@ -178,17 +180,26 @@ class EdgeBetweennessCentrality:
         if number_of_partitions > len(self.graph.nodes):
             raise ValueError('Number of partitions cant be larger than number of nodes',
                              '#ofnodes:' + str(len(self.graph.nodes)) + ' < #ofpartitions:' + str(number_of_partitions))
-        partitions_list = [self.graph]
-        while len(partitions_list) < number_of_partitions:
-            partitions_list.sort(key=len, reverse=True)
-            graph_to_part = partitions_list.pop(0)
-            while is_connected(graph_to_part):
-                centrality_list = edge_betweenness_centrality(graph_to_part)
-                top_edge = max(centrality_list.items(), key=operator.itemgetter(1))[0]
-                graph_to_part.remove_edge(*top_edge)
-            partitions = connected_components(graph_to_part)
-            for partition in partitions:
-                partitions_list.append(nx.Graph(subgraph(graph_to_part, partition)))
+        partitions_list = []
+        # while len(partitions_list) < number_of_partitions:
+        #     partitions_list.sort(key=len, reverse=True)
+        #     graph_to_part = partitions_list.pop(0)
+        #     while is_connected(graph_to_part):
+        #         centrality_list = edge_betweenness_centrality(graph_to_part)
+        #         top_edge = max(centrality_list.items(), key=operator.itemgetter(1))[0]
+        #         graph_to_part.remove_edge(*top_edge)
+        #     partitions = connected_components(graph_to_part)
+        #     for partition in partitions:
+        #         partitions_list.append(nx.Graph(subgraph(graph_to_part, partition)))
+        com_list =[]
+        graph_to_part = self.graph
+        comp = girvan_newman(graph_to_part)
+        for communities in itertools.islice(comp, number_of_partitions):
+            com_list.append(communities)
+
+
+        for node_list in com_list[-1]:
+            partitions_list.append(graph_to_part.subgraph(node_list))
 
         self.partitions = partitions_list
         return self.partitions
@@ -242,13 +253,27 @@ if __name__ == '__main__':
     # g = nx.powerlaw_cluster_graph(50, 2, 0.6)
     # g = nx.read_edgelist('soc-karate.csv', delimiter=',', nodetype=str)
     # g.name = 'karate'
-    bisection = EdgeBetweennessCentrality(g)
-    parts = bisection.partition(6)
+
+
+    k = 5
+    comp = girvan_newman(g)
+    for communities in itertools.islice(comp, k):
+        print(communities)
+
+    part = EdgeBetweennessCentrality(g)
+    parts = part.partition(10)
+    part.drawInitialWithColor('t.png')
+    for p in parts:
+        print(p.nodes)
+
+
+        # print(tuple(sorted(c) for c in communities)[-1])
+    # parts = bisection.partition(6)
     # bisection.drawInitialWithColor('ker.png')
 
-    print(parts)
-    for i in parts:
-        print(i.nodes)
+    # print(parts)
+    # for i in parts:
+    #     print(i.nodes)
 
 
     # partitions = bisection.partition(4)
