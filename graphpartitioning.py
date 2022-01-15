@@ -8,6 +8,7 @@ from networkx.linalg.algebraicconnectivity import algebraic_connectivity, fiedle
 from networkx.classes.function import subgraph
 import networkx as nx
 import itertools
+import seaborn as sns
 
 
 class SpectralBisection:
@@ -69,7 +70,8 @@ class SpectralBisection:
     # todo: limit node number for drawing
     # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
-        colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow']
+        # Generate colormap
+        colors = sns.color_palette(None, len(self.partitions)).as_hex()
         combined = nx.Graph()
         for ind, part in enumerate(self.partitions):
             nx.set_node_attributes(part, colors[ind], 'color')
@@ -144,7 +146,8 @@ class KernighanLin:
     # todo: limit node number for drawing
     # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
-        colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow']
+        # Generate colormap
+        colors = sns.color_palette(None, len(self.partitions)).as_hex()
         combined = nx.Graph()
         for ind, part in enumerate(self.partitions):
             nx.set_node_attributes(part, colors[ind], 'color')
@@ -197,7 +200,6 @@ class EdgeBetweennessCentrality:
         for communities in itertools.islice(comp, number_of_partitions):
             com_list.append(communities)
 
-
         for node_list in com_list[-1]:
             partitions_list.append(graph_to_part.subgraph(node_list))
 
@@ -227,14 +229,15 @@ class EdgeBetweennessCentrality:
     # todo: limit node number for drawing
     # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
-        colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow']
+        # Generate colormap
+        colors = sns.color_palette(None, len(self.partitions)).as_hex()
         combined = nx.Graph()
         for ind, part in enumerate(self.partitions):
             nx.set_node_attributes(part, colors[ind], 'color')
             combined = nx.compose(combined, part)
         node_colors = nx.get_node_attributes(combined, 'color').values()
         nx.set_edge_attributes(combined, 'b', 'color')
-        # combined.add_edges_from(self.getRemovedEdges(), color='r')
+
         for edge in self.getRemovedEdges():
             combined.add_edge(*edge, color='r')
 
@@ -266,6 +269,10 @@ if __name__ == '__main__':
     for p in parts:
         print(p.nodes)
 
+        import seaborn as sns
+
+    palette = sns.color_palette(None, 5)
+    print(palette.as_hex())
 
         # print(tuple(sorted(c) for c in communities)[-1])
     # parts = bisection.partition(6)
