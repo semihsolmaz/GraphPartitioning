@@ -1,10 +1,7 @@
-import operator
 import matplotlib.pyplot as plt
 from networkx.algorithms.community import kernighan_lin, girvan_newman
-from networkx.algorithms.centrality import edge_betweenness_centrality
-from networkx.algorithms.components import is_connected, connected_components
 from networkx.linalg.laplacianmatrix import laplacian_matrix
-from networkx.linalg.algebraicconnectivity import algebraic_connectivity, fiedler_vector, spectral_ordering
+from networkx.linalg.algebraicconnectivity import fiedler_vector, spectral_ordering
 from networkx.classes.function import subgraph
 import networkx as nx
 import itertools
@@ -20,9 +17,6 @@ class SpectralBisection:
     def __init__(self, g):
         self.graph = g
         self.partitions = [self.graph]
-        # self.laplacian_matrix = laplacian_matrix(g)
-        # self.laplacian_spectrum = laplacian_spectrum(g)
-        # self.algebraic_connectivity = algebraic_connectivity(g)
 
     def partition(self, number_of_partitions):
         if number_of_partitions > len(self.graph.nodes):
@@ -35,7 +29,6 @@ class SpectralBisection:
             graph_bisect = partitions_list.pop(0)
             spectral_ordering_g = spectral_ordering(graph_bisect)
 
-            # todo: directly slice list without iterating
             for index, node in enumerate(spectral_ordering_g):
                 if index < int(len(spectral_ordering_g)/2):
                     part_1.append(node)
@@ -67,8 +60,6 @@ class SpectralBisection:
             if n == 1:
                 plt.savefig("PartedGraph.png", format="PNG")
 
-    # todo: limit node number for drawing
-    # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
         # Generate colormap
         colors = sns.color_palette(None, len(self.partitions)).as_hex()
@@ -143,8 +134,6 @@ class KernighanLin:
             if n == 1:
                 plt.savefig("PartedGraph.png", format="PNG")
 
-    # todo: limit node number for drawing
-    # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
         # Generate colormap
         colors = sns.color_palette(None, len(self.partitions)).as_hex()
@@ -184,16 +173,6 @@ class EdgeBetweennessCentrality:
             raise ValueError('Number of partitions cant be larger than number of nodes',
                              '#ofnodes:' + str(len(self.graph.nodes)) + ' < #ofpartitions:' + str(number_of_partitions))
         partitions_list = []
-        # while len(partitions_list) < number_of_partitions:
-        #     partitions_list.sort(key=len, reverse=True)
-        #     graph_to_part = partitions_list.pop(0)
-        #     while is_connected(graph_to_part):
-        #         centrality_list = edge_betweenness_centrality(graph_to_part)
-        #         top_edge = max(centrality_list.items(), key=operator.itemgetter(1))[0]
-        #         graph_to_part.remove_edge(*top_edge)
-        #     partitions = connected_components(graph_to_part)
-        #     for partition in partitions:
-        #         partitions_list.append(nx.Graph(subgraph(graph_to_part, partition)))
         com_list =[]
         graph_to_part = self.graph
         comp = girvan_newman(graph_to_part)
@@ -226,8 +205,6 @@ class EdgeBetweennessCentrality:
             if n == 1:
                 plt.savefig("PartedGraph.png", format="PNG")
 
-    # todo: limit node number for drawing
-    # todo: color nodes for partitions (optional: add legend)
     def drawInitialWithColor(self, outfile):
         # Generate colormap
         colors = sns.color_palette(None, len(self.partitions)).as_hex()
