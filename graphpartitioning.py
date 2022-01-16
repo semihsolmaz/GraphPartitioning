@@ -249,7 +249,3 @@ class EdgeBetweennessCentrality:
         plt.savefig(outfile, format="PNG")
 
         return combined
-
-
-if __name__ == '__main__':
-    pass

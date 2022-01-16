@@ -97,9 +97,13 @@ def cli():
         print(f"{bcolors.OKGREEN}{output_file} created.{bcolors.ENDC}")
 
         if args.draw:
-            print(f"{bcolors.BOLD}Drawing graph...{bcolors.ENDC}")
-            parted_graph.drawInitialWithColor(args.read[0].split('.')[0] + '.png')
-            print(f"{bcolors.OKGREEN}{args.read[0].split('.')[0] + '.png'} created.{bcolors.ENDC}")
+            if len(graph.nodes) < 251:
+                print(f"{bcolors.BOLD}Drawing graph...{bcolors.ENDC}")
+                parted_graph.drawInitialWithColor(args.read[0].split('.')[0] + '.png')
+                print(f"{bcolors.OKGREEN}{args.read[0].split('.')[0] + '.png'} created.{bcolors.ENDC}")
+            else:
+                print(f"{bcolors.FAIL}Cannot draw graphs bigger than 250 nodes.{bcolors.ENDC}")
+                print(f"{bcolors.WARNING}Skipping drawing.{bcolors.ENDC}")
 
 
 if __name__ == "__main__":

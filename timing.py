@@ -23,7 +23,7 @@ if __name__ == '__main__':
         print(str(i) + ' spec=======================================')
         x1 = speed_test(SpectralBisection, g)
         print(x1)
-        if i < 4100:
+        if i < 520:
             print(str(i) + ' kern=======================================')
             x2 = speed_test(KernighanLin, g)
             print(x2)
