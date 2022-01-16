@@ -7,17 +7,24 @@ An edge list labeled with partitons isoutputted to a csv file.
 
 Optionally, a png graphic file displaying orginal graph and the removed edges can be created.
 
-## Usage
+###Installation Instructions:
+- Download the executable file for your operating system from [releases](https://github.com/semihsolmaz/GraphPartitioning/releases).
+- cd into the directory that you have downloaded the file.
+- Run command (example below)
+
+### CLI help:
 ```
-usage: cli.py [-h] -r input_file_path [-n number_of_partitions]
-              [-o output_path] [-d]
-              method
+path/to/executable/file >GPcli -h
+usage: GPcli.exe [-h] -r input_file_path [-n number_of_partitions]
+                 [-o output_path] [-d]
+                 method
 
 A graph partitioning application!
 
 positional arguments:
-  method                Name of graph partiton algorithm. Options
-                        are:['SpectralBisection', 'KernighanLin']
+  method                Name of graph partition algorithm. Options
+                        are:['SpectralBisection', 'KernighanLin',
+                        'EdgeBetweennessCentrality']
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -32,4 +39,21 @@ optional arguments:
   -d, --draw            Draws a graphical representation of graph. Default is
                         false
 
-```                        
+```
+ 
+ ### Usage example:
+ ```
+path/to/executable/file >GPcli -r soc-karate.csv -n 3 -o karate-edge-betweenness.csv EdgeBetweennessCentrality
+  Reading soc-karate.csv...
+  soc-karate.csv is read.
+  Graph Info:
+  Name: soc-karate
+  Type: Graph
+  Number of nodes: 34
+  Number of edges: 78
+  Average degree:   4.5882
+  Partitioning...
+  Done.
+  Creating output file...
+  karate-edge-betweenness.csv created.
+```
