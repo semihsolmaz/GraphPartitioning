@@ -35,17 +35,16 @@ optional arguments:
  ### Usage example
  ```
 path/to/executable/file >GPcli.exe -r soc-karate.csv -n 3 -o karate-edge-betweenness.csv EdgeBetweennessCentrality
-Reading soc-karate.csv...
-soc-karate.csv is read.
-Graph Info:
-Name: soc-karate
-Type: Graph
-Number of nodes: 34
-Number of edges: 78
-Average degree:   4.5882
-Partitioning...
-Done.
-Creating output file...
-karate-edge-betweenness.csv created.
-
+  Reading soc-karate.csv...
+  soc-karate.csv is read.
+  Graph Info:
+  Name: soc-karate
+  Type: Graph
+  Number of nodes: 34
+  Number of edges: 78
+  Average degree:   4.5882
+  Partitioning...
+  Done.
+  Creating output file...
+  karate-edge-betweenness.csv created.
 ```
