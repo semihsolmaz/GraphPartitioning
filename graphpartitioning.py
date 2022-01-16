@@ -59,8 +59,8 @@ class SpectralBisection:
         return removed_edges
 
     def drawPartitions(self):
-        options = {"node_color": "white", "node_size": 100, "linewidths": 0, "width": 0.1, "with_labels": True}
-        pos = nx.kamada_kawai_layout(g)
+        options = {"node_color": "yellow", "node_size": 100, "linewidths": 0, "width": 0.1, "with_labels": True}
+        pos = nx.kamada_kawai_layout(self.graph)
 
         for n, graph in enumerate(self.partitions):
             nx.draw(graph, pos, **options)
@@ -78,7 +78,7 @@ class SpectralBisection:
             combined = nx.compose(combined, part)
         node_colors = nx.get_node_attributes(combined, 'color').values()
         nx.set_edge_attributes(combined, 'b', 'color')
-        # combined.add_edges_from(self.getRemovedEdges(), color='r')
+
         for edge in self.getRemovedEdges():
             combined.add_edge(*edge, color='r')
 
@@ -136,7 +136,7 @@ class KernighanLin:
 
     def drawPartitions(self):
         options = {"node_color": "white", "node_size": 100, "linewidths": 0, "width": 0.1, "with_labels": True}
-        pos = nx.kamada_kawai_layout(g)
+        pos = nx.kamada_kawai_layout(self.graph)
 
         for n, graph in enumerate(self.partitions):
             nx.draw(graph, pos, **options)
@@ -154,7 +154,7 @@ class KernighanLin:
             combined = nx.compose(combined, part)
         node_colors = nx.get_node_attributes(combined, 'color').values()
         nx.set_edge_attributes(combined, 'b', 'color')
-        # combined.add_edges_from(self.getRemovedEdges(), color='r')
+
         for edge in self.getRemovedEdges():
             combined.add_edge(*edge, color='r')
 
@@ -219,7 +219,7 @@ class EdgeBetweennessCentrality:
 
     def drawPartitions(self):
         options = {"node_color": "white", "node_size": 100, "linewidths": 0, "width": 0.1, "with_labels": True}
-        pos = nx.kamada_kawai_layout(g)
+        pos = nx.kamada_kawai_layout(self.graph)
 
         for n, graph in enumerate(self.partitions):
             nx.draw(graph, pos, **options)
@@ -252,39 +252,4 @@ class EdgeBetweennessCentrality:
 
 
 if __name__ == '__main__':
-    g = nx.karate_club_graph()
-    # g = nx.powerlaw_cluster_graph(50, 2, 0.6)
-    # g = nx.read_edgelist('soc-karate.csv', delimiter=',', nodetype=str)
-    # g.name = 'karate'
-
-
-    k = 5
-    comp = girvan_newman(g)
-    for communities in itertools.islice(comp, k):
-        print(communities)
-
-    part = EdgeBetweennessCentrality(g)
-    parts = part.partition(10)
-    part.drawInitialWithColor('t.png')
-    for p in parts:
-        print(p.nodes)
-
-        import seaborn as sns
-
-    palette = sns.color_palette(None, 5)
-    print(palette.as_hex())
-
-        # print(tuple(sorted(c) for c in communities)[-1])
-    # parts = bisection.partition(6)
-    # bisection.drawInitialWithColor('ker.png')
-
-    # print(parts)
-    # for i in parts:
-    #     print(i.nodes)
-
-
-    # partitions = bisection.partition(4)
-    # bisection.drawInitialWithColor('test.png')
-    # print(bisection.getRemovedEdges())
-    # for i in partitions:
-    #     print((len(i.nodes)))
+    pass

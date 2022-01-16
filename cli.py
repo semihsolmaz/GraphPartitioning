@@ -100,12 +100,6 @@ def cli():
             print(f"{bcolors.BOLD}Drawing graph...{bcolors.ENDC}")
             parted_graph.drawInitialWithColor(args.read[0].split('.')[0] + '.png')
             print(f"{bcolors.OKGREEN}{args.read[0].split('.')[0] + '.png'} created.{bcolors.ENDC}")
-    # elif args.delete != None:
-    #     delete(args)
-    # elif args.copy != None:
-    #     copy(args)
-    # elif args.rename != None:
-    #     rename(args)
 
 
 if __name__ == "__main__":

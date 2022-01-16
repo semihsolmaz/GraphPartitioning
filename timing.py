@@ -1,7 +1,7 @@
 import time
 from memory_profiler import profile
 import networkx as nx
-from graphpartitioning import SpectralBisection, KernighanLin
+from graphpartitioning import SpectralBisection, KernighanLin, EdgeBetweennessCentrality
 from memory_profiler import profile
 
 
@@ -15,32 +15,23 @@ def speed_test(method, graph):
 
 
 if __name__ == '__main__':
-        # g = nx.powerlaw_cluster_graph(100, 3, 0.2)
-        # print(nx.info(g))
-        # nx.readwrite.write_edgelist(g, 'test_graph-100.csv', delimiter=',')
-        # g2 = nx.powerlaw_cluster_graph(10000, 3, 0.2)
-        # print(nx.info(g2))
-        # nx.readwrite.write_edgelist(g2, 'test_graph-10K.csv', delimiter=',')
-        # g3 = nx.powerlaw_cluster_graph(100000, 3, 0.2)
-        # print(nx.info(g3))
-        # nx.readwrite.write_edgelist(g3, 'test_graph-100K.csv', delimiter=',')
-        print('100 =======================================')
-        g = nx.read_edgelist('test_graph-100.csv', delimiter=',', nodetype=str)
+
+    for i in [2**x for x in range(6, 15)]:
+        print(i)
+        print('+++++++++++++++++++++++++++++++++++++++++++++++++')
+        g = nx.powerlaw_cluster_graph(i, 3, 0.2)
+        print(str(i) + ' spec=======================================')
         x1 = speed_test(SpectralBisection, g)
         print(x1)
-        print('1K =======================================')
-        g = nx.read_edgelist('test_graph-1K.csv', delimiter=',', nodetype=str)
-        x2 = speed_test(SpectralBisection, g)
-        print(x2)
-        print('10K =======================================')
-        g = nx.read_edgelist('test_graph-10K.csv', delimiter=',', nodetype=str)
-        x3 = speed_test(SpectralBisection, g)
-        print(x3)
-        print('100K =======================================')
-        g = nx.read_edgelist('test_graph-100K.csv', delimiter=',', nodetype=str)
-        x4 = speed_test(SpectralBisection, g)
-        print(x4)
-
+        if i < 4100:
+            print(str(i) + ' kern=======================================')
+            x2 = speed_test(KernighanLin, g)
+            print(x2)
+        if i < 520:
+            print(str(i) + ' Edge=======================================')
+            x3 = speed_test(EdgeBetweennessCentrality, g)
+            print(x3)
+        print('+++++++++++++++++++++++++++++++++++++++++++++++++')
 
 
 
