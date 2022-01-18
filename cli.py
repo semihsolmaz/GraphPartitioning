@@ -85,7 +85,7 @@ def cli():
         headers = ['node', 'node', 'partition']
 
         print(f"{bcolors.BOLD}Creating output file...{bcolors.ENDC}")
-        with open(output_file, 'w', encoding='UTF8') as f:
+        with open(output_file, 'w', encoding='UTF8', newline='') as f:
 
             writer = csv.writer(f)
             writer.writerow(headers)
