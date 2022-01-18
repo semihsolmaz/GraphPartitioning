@@ -53,7 +53,7 @@ class SpectralBisection:
 
     def drawPartitions(self):
         options = {"node_color": "yellow", "node_size": 100, "linewidths": 0, "width": 0.1, "with_labels": True}
-        pos = nx.kamada_kawai_layout(self.graph)
+        pos = nx.kamada_kawai_layout(self.graph, scale=100)
 
         for n, graph in enumerate(self.partitions):
             nx.draw(graph, pos, **options)
@@ -75,7 +75,8 @@ class SpectralBisection:
 
         colors = nx.get_edge_attributes(combined, 'color').values()
         options = {"node_size": 300, "linewidths": 0.5, "width": 0.2, "with_labels": True}
-        pos = nx.kamada_kawai_layout(combined)
+        plt.figure(3, figsize=(15, 15))
+        pos = nx.kamada_kawai_layout(combined, scale=100)
 
         nx.draw(combined, pos, edge_color=colors, node_color=node_colors, **options)
         plt.savefig(outfile, format="PNG")
@@ -149,6 +150,7 @@ class KernighanLin:
 
         colors = nx.get_edge_attributes(combined, 'color').values()
         options = {"node_size": 300, "linewidths": 0.5, "width": 0.2, "with_labels": True}
+        plt.figure(3, figsize=(15, 15))
         pos = nx.kamada_kawai_layout(combined)
 
         nx.draw(combined, pos, edge_color=colors, node_color=node_colors, **options)
@@ -220,6 +222,7 @@ class EdgeBetweennessCentrality:
 
         colors = nx.get_edge_attributes(combined, 'color').values()
         options = {"node_size": 300, "linewidths": 0.5, "width": 0.2, "with_labels": True}
+        plt.figure(3, figsize=(15, 15))
         pos = nx.kamada_kawai_layout(combined)
 
         nx.draw(combined, pos, edge_color=colors, node_color=node_colors, **options)
